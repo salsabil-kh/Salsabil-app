@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var books=[{Titre:"Atomic Habits",author:"James clear",price:35},{Titre:"Le crepsule d'une iode",author:"Michel Onfray",price:40}];
+        var editIndex = -1; 
+        function displayBooks(){
+            let table=document.getElementById("book");
+                table.innerHTML = "";
+            books.forEach((book,index) => {
+                table.innerHTML +=
+                `
+                    <tr>
+                        <td>${book.Titre}</td>
+                        <td>${book.author}</td>
+                        <td>${book.price}</td>
+                        <td><button onclick="editBook(${index})">Éditer</button></td>
+                        <td><button onclick="deleteBook(${index})">Supprimer</button><td/>
+                        <td><button onclick="modifier(${index})">Modifier</button></td>
+                    </tr> 
+                `;
+                
+             });
+        };
+         function addBook(event) {
+            event.preventDefault();
+            let title = document.getElementById("title").value;
+            let author = document.getElementById("author").value;
+            let price = parseFloat(document.getElementById("price").value);
+            if (editIndex !== -1) {
+                books[editIndex] = { Titre: title, author: author, price: price };
+                displayBooks();
+                editIndex = -1;
+            }
+            else{
+                books.push({ Titre: title, author: author, price: price });
+                displayBooks();
+            }
+            
+            document.getElementById("bookForm").reset();
+         };
+         function editBook(index) {
+            document.getElementById("title").value = books[index].Titre;
+            document.getElementById("author").value = books[index].author;
+            document.getElementById("price").value = books[index].price;
+            books[index].Titre=document.getElementById("title").value;
+            books[index].author=document.getElementById("author").value ;
+            books[index].price=document.getElementById("price").value ;
+         }
+            function modifier(index){
+                let row = document.getElementsByTagName("tr")[index+1];
+                 row.innerHTML = `
+                <td>${books[index].Titre}</td>
+                <td>${books[index].author}</td>
+                <td>${books[index].price}</td>
+                <td><button onclick="editBook(${index})">Éditer</button></td>
+                <td><button onclick="deleteBook(${index})">Supprimer</button></td>;
+                <td><button onclick="modifier(${index})">Modifier</button></td>`
+                ;
+
+                displayBooks();
+                editIndex = index;
+
+            }
+         function deleteBook(index) {
+            books.splice(index, 1); 
+            displayBooks();
+        };
+
+         window.onload = function() {
+            displayBooks();
+        };
+
+    </script>
+    <h1>Liste des Livres</h1>
+    <table border="1" id="book">
+    <tr>
+        <th>Titre</th>
+        <th>Auteur</th>
+        <th>Prix</th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+</table>
+<form id="bookForm"  onsubmit="addBook(event)">
+    <label for="title">Titre :</label>
+    <input type="text" id="title" name="title" required><br><br>
+
+    <label for="author">Auteur :</label>
+    <input type="text" id="author" name="author" required><br><br>
+
+    <label for="price">Prix :</label>
+    <input type="number" id="price" name="price" required><br><br>
+
+    <button type="submit">Ajouter le Livre</button>
+</form>
+    
+</body>
+</html>
